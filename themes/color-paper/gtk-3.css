@@ -1,0 +1,186 @@
+/* paper-modes: color-paper  —  GTK3
+ * Warm stationery surfaces. Do not edit while Color Paper is active. */
+
+@define-color theme_bg_color #F7F1E8;
+@define-color theme_fg_color #343434;
+@define-color theme_base_color #FDFAF6;
+@define-color theme_text_color #343434;
+@define-color theme_selected_bg_color #D9E4EA;
+@define-color theme_selected_fg_color #343434;
+@define-color theme_unfocused_bg_color #F7F1E8;
+@define-color theme_unfocused_fg_color #62605B;
+@define-color theme_unfocused_base_color #FDFAF6;
+@define-color theme_unfocused_text_color #62605B;
+@define-color theme_unfocused_selected_bg_color #E7E1D8;
+@define-color theme_unfocused_selected_fg_color #343434;
+@define-color insensitive_bg_color #F5EFE7;
+@define-color insensitive_fg_color #AAA59C;
+@define-color insensitive_base_color #F5EFE7;
+@define-color borders #EDE7DD;
+@define-color unfocused_borders #EDE7DD;
+@define-color warning_color #F3ECD0;
+@define-color error_color #DCC0B0;
+@define-color success_color #B7C8B0;
+@define-color accent_bg_color #D9E4EA;
+@define-color accent_fg_color #343434;
+@define-color content_view_bg #FDFAF6;
+@define-color wm_bg #F5EFE7;
+@define-color wm_title #343434;
+@define-color wm_border #EDE7DD;
+
+* {
+  -gtk-secondary-caret-color: #D9E4EA;
+}
+
+window, .background, .csd {
+  background-color: #F7F1E8;
+  color: #343434;
+}
+
+headerbar, .titlebar, .titlebar.default-decoration {
+  background-image: none;
+  background-color: #F5EFE7;
+  color: #343434;
+  border-color: #EDE7DD;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+menu, .menu, .context-menu, popover, .popover {
+  background-color: #FDFAF6;
+  color: #343434;
+  border: 1px solid #EDE7DD;
+  border-radius: 8px;
+  box-shadow: 0 4px 14px rgba(52, 52, 52, 0.08);
+}
+
+menuitem:hover, .menuitem:hover, modelbutton:hover {
+  background-color: #D9E4EA;
+  color: #343434;
+}
+
+entry, textview, textview text, spinbutton {
+  background-color: #F7F1E8;
+  color: #343434;
+  border: 1px solid #EDE7DD;
+  border-radius: 6px;
+  box-shadow: none;
+  caret-color: #343434;
+}
+
+entry:focus {
+  border-color: #D9E4EA;
+}
+
+button, .button {
+  background-image: none;
+  background-color: #FDFAF6;
+  color: #343434;
+  border: 1px solid #EDE7DD;
+  border-radius: 6px;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+button:hover, .button:hover {
+  background-color: #F5EFE7;
+}
+
+button:active, .button:active {
+  background-color: #EDE7DD;
+}
+
+button.suggested-action, .suggested-action {
+  background-image: none;
+  background-color: #D9E4EA;
+  color: #343434;
+  border-color: #CBD8E0;
+}
+
+button.destructive-action, .destructive-action {
+  background-image: none;
+  background-color: #F0E2E2;
+  color: #343434;
+  border-color: #E5D0D0;
+}
+
+.view, iconview, treeview, list, .list, notebook > stack {
+  background-color: #FDFAF6;
+  color: #343434;
+}
+
+row:selected, treeview:selected, .view:selected, iconview:selected {
+  background-color: #D9E4EA;
+  color: #343434;
+}
+
+switch {
+  background-color: #E7E1D8;
+  border: 1px solid #EDE7DD;
+  box-shadow: none;
+}
+
+switch:checked {
+  background-color: #D7E4DF;
+}
+
+switch slider {
+  background-color: #FDFAF6;
+  border: 1px solid #EDE7DD;
+  box-shadow: none;
+}
+
+scale trough {
+  background-color: #E7E1D8;
+  border: none;
+  min-height: 4px;
+}
+
+scale highlight {
+  background-color: #D9E4EA;
+}
+
+scale slider {
+  background-image: none;
+  background-color: #FDFAF6;
+  border: 1px solid #EDE7DD;
+  box-shadow: none;
+}
+
+check, radio {
+  background-image: none;
+  background-color: #FDFAF6;
+  border: 1px solid #EDE7DD;
+  box-shadow: none;
+}
+
+check:checked, radio:checked {
+  background-color: #D9E4EA;
+}
+
+tooltip, tooltip.background {
+  background-color: #F5EFE7;
+  color: #343434;
+  border: 1px solid #EDE7DD;
+}
+
+separator, .separator {
+  background-color: #EDE7DD;
+}
+
+scrollbar slider {
+  background-color: #E7E1D8;
+  border: none;
+}
+
+*:disabled {
+  color: #AAA59C;
+}
+
+*:link, .link {
+  color: #8B9BA3;
+}
+progressbar progress, trough progress {
+  background-image: none;
+  background-color: #D9E4EA;
+}

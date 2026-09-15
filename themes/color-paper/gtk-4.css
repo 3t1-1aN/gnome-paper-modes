@@ -1,0 +1,293 @@
+/* paper-modes: color-paper  —  libadwaita / GTK4
+ * Warm stationery surfaces. Do not edit while Color Paper is active. */
+
+:root {
+  --accent-bg-color: #D9E4EA;
+  --accent-fg-color: #343434;
+  --accent-color: #B7C5CC;
+
+  --destructive-bg-color: #F0E2E2;
+  --destructive-fg-color: #343434;
+  --destructive-color: #D4BABA;
+
+  --success-bg-color: #DEE6D6;
+  --success-fg-color: #343434;
+  --success-color: #B7C8B0;
+
+  --warning-bg-color: #F3ECD0;
+  --warning-fg-color: #343434;
+  --warning-color: #D2C496;
+
+  --error-bg-color: #EEDFD6;
+  --error-fg-color: #343434;
+  --error-color: #DCC0B0;
+
+  --window-bg-color: #F7F1E8;
+  --window-fg-color: #343434;
+
+  --view-bg-color: #FDFAF6;
+  --view-fg-color: #343434;
+
+  --headerbar-bg-color: #F5EFE7;
+  --headerbar-fg-color: #343434;
+  --headerbar-border-color: #EDE7DD;
+  --headerbar-backdrop-color: #F7F1E8;
+  --headerbar-shade-color: rgba(52, 52, 52, 0.06);
+  --headerbar-darker-shade-color: rgba(52, 52, 52, 0.1);
+
+  --sidebar-bg-color: #F5EFE7;
+  --sidebar-fg-color: #343434;
+  --sidebar-backdrop-color: #F7F1E8;
+  --sidebar-border-color: #EDE7DD;
+  --sidebar-shade-color: rgba(52, 52, 52, 0.06);
+
+  --secondary-sidebar-bg-color: #F7F1E8;
+  --secondary-sidebar-fg-color: #343434;
+  --secondary-sidebar-backdrop-color: #F7F1E8;
+  --secondary-sidebar-border-color: #EDE7DD;
+  --secondary-sidebar-shade-color: rgba(52, 52, 52, 0.04);
+
+  --card-bg-color: #FDFAF6;
+  --card-fg-color: #343434;
+  --card-shade-color: rgba(52, 52, 52, 0.05);
+
+  --dialog-bg-color: #FDFAF6;
+  --dialog-fg-color: #343434;
+
+  --popover-bg-color: #FDFAF6;
+  --popover-fg-color: #343434;
+  --popover-shade-color: rgba(52, 52, 52, 0.06);
+
+  --thumbnail-bg-color: #F5EFE7;
+  --thumbnail-fg-color: #343434;
+
+  --shade-color: rgba(52, 52, 52, 0.07);
+  --scrollbar-outline-color: #F7F1E8;
+}
+
+@define-color accent_bg_color #D9E4EA;
+@define-color accent_fg_color #343434;
+@define-color accent_color #B7C5CC;
+@define-color window_bg_color #F7F1E8;
+@define-color window_fg_color #343434;
+@define-color view_bg_color #FDFAF6;
+@define-color view_fg_color #343434;
+@define-color headerbar_bg_color #F5EFE7;
+@define-color headerbar_fg_color #343434;
+@define-color headerbar_border_color #EDE7DD;
+@define-color popover_bg_color #FDFAF6;
+@define-color popover_fg_color #343434;
+@define-color dialog_bg_color #FDFAF6;
+@define-color dialog_fg_color #343434;
+@define-color card_bg_color #FDFAF6;
+@define-color card_fg_color #343434;
+@define-color sidebar_bg_color #F5EFE7;
+@define-color sidebar_fg_color #343434;
+@define-color borders #EDE7DD;
+@define-color theme_bg_color #F7F1E8;
+@define-color theme_fg_color #343434;
+@define-color theme_base_color #FDFAF6;
+@define-color theme_text_color #343434;
+@define-color theme_selected_bg_color #D9E4EA;
+@define-color theme_selected_fg_color #343434;
+@define-color theme_unfocused_selected_bg_color #E7E1D8;
+@define-color insensitive_fg_color #AAA59C;
+@define-color warning_color #F3ECD0;
+@define-color error_color #EEDFD6;
+@define-color success_color #DEE6D6;
+@define-color destructive_bg_color #F0E2E2;
+@define-color destructive_fg_color #343434;
+
+window, .background {
+  background-color: #F7F1E8;
+  color: #343434;
+}
+
+headerbar, .titlebar {
+  background-color: #F5EFE7;
+  color: #343434;
+  border-bottom: 1px solid #EDE7DD;
+  box-shadow: none;
+}
+
+popover, popover.background, menu, .menu {
+  background-color: #FDFAF6;
+  color: #343434;
+  border: 1px solid #EDE7DD;
+  border-radius: 8px;
+  box-shadow: 0 4px 14px rgba(52, 52, 52, 0.08);
+}
+
+popover contents, contents {
+  background-color: #FDFAF6;
+}
+
+entry, textview, spinbutton {
+  background-color: #F7F1E8;
+  color: #343434;
+  border: 1px solid #EDE7DD;
+  border-radius: 6px;
+  box-shadow: none;
+}
+
+entry:focus, textview:focus, spinbutton:focus {
+  border-color: #D9E4EA;
+}
+
+button {
+  background: #FDFAF6;
+  color: #343434;
+  border: 1px solid #EDE7DD;
+  border-radius: 6px;
+  box-shadow: none;
+  min-height: 28px;
+}
+
+button:hover {
+  background: #F5EFE7;
+}
+
+button:active {
+  background: #EDE7DD;
+}
+
+button.suggested-action,
+button.default,
+.suggested-action {
+  background: #D9E4EA;
+  color: #343434;
+  border: 1px solid #CBD8E0;
+}
+
+button.suggested-action:hover,
+button.default:hover,
+.suggested-action:hover {
+  background: #CBD8E0;
+}
+
+button.destructive-action,
+.destructive-action {
+  background: #F0E2E2;
+  color: #343434;
+  border: 1px solid #E5D0D0;
+}
+
+button.flat, button.circular {
+  background: transparent;
+  border-color: transparent;
+}
+
+list, listview, columnview, iconview, treeview {
+  background-color: #FDFAF6;
+  color: #343434;
+}
+
+list row:hover, listview row:hover {
+  background-color: #F5EFE7;
+}
+
+list row:selected, listview row:selected,
+iconview:selected, treeview:selected {
+  background-color: #D9E4EA;
+  color: #343434;
+}
+
+switch {
+  background-color: #E7E1D8;
+  border: 1px solid #EDE7DD;
+  box-shadow: none;
+}
+
+switch:checked {
+  background-color: #D7E4DF;
+  border-color: #C8D5D0;
+}
+
+switch slider {
+  background-color: #FDFAF6;
+  border: 1px solid #EDE7DD;
+  box-shadow: none;
+}
+
+scale trough {
+  background-color: #E7E1D8;
+  min-height: 4px;
+  border-radius: 999px;
+}
+
+scale highlight {
+  background-color: #D9E4EA;
+}
+
+scale slider {
+  background-color: #FDFAF6;
+  border: 1px solid #EDE7DD;
+  box-shadow: none;
+}
+
+check, radio {
+  background-color: #FDFAF6;
+  border: 1px solid #EDE7DD;
+  box-shadow: none;
+}
+
+check:checked, radio:checked {
+  background-color: #D9E4EA;
+  color: #343434;
+}
+
+tooltip {
+  background-color: #F5EFE7;
+  color: #343434;
+  border: 1px solid #EDE7DD;
+}
+
+scrollbar slider {
+  background-color: #E7E1D8;
+}
+
+scrollbar slider:hover {
+  background-color: #D3CDC4;
+}
+
+separator {
+  background-color: #EDE7DD;
+  min-width: 1px;
+  min-height: 1px;
+}
+
+selection {
+  background-color: #D9E4EA;
+  color: #343434;
+}
+
+label.dim-label, .dim-label {
+  color: #89857D;
+}
+
+*:disabled {
+  color: #AAA59C;
+}
+
+/* flatten remaining Yaru/libadwaita chroma into paper pigment */
+link, *:link, .link, .accent {
+  color: #8B9BA3;
+}
+progressbar trough, levelbar trough {
+  background-color: #E7E1D8;
+}
+progressbar progress, levelbar block.filled {
+  background-color: #D9E4EA;
+}
+switch:checked, switch:checked:hover {
+  background-color: #D7E4DF;
+  color: #343434;
+}
+check:checked, radio:checked, check:indeterminate {
+  background-color: #D9E4EA;
+  color: #343434;
+  border-color: #CBD8E0;
+}
+focus {
+  outline-color: #D9E4EA;
+}

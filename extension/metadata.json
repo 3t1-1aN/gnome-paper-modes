@@ -1,0 +1,8 @@
+{
+  "uuid": "paper-modes@local",
+  "name": "Paper Modes",
+  "description": "Applies regular, ink, and color-paper screen color transforms for ~/paper-modes.",
+  "shell-version": ["50"],
+  "session-modes": ["user", "unlock-dialog"],
+  "url": "file:///home/ekunder/paper-modes"
+}

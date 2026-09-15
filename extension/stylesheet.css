@@ -1,0 +1,230 @@
+/* paper-modes color-paper — GNOME Shell chrome.
+ * Active only while uiGroup/panel carry .paper-color */
+
+.paper-color #panel {
+  background-color: #F5EFE7;
+  background-gradient-direction: none;
+  color: #343434;
+  box-shadow: inset 0 -1px 0 0 #EDE7DD;
+  font-weight: 600;
+  transition-duration: 420ms;
+}
+
+.paper-color #panel .panel-button {
+  color: #343434;
+}
+
+.paper-color #panel .panel-button:hover,
+.paper-color #panel .panel-button:active,
+.paper-color #panel .panel-button:overview,
+.paper-color #panel .panel-button:focus {
+  background-color: rgba(175, 200, 216, 0.45);
+  color: #343434;
+  box-shadow: none;
+}
+
+.paper-color #panel .clock-display StIcon,
+.paper-color #panel StIcon {
+  color: #343434;
+}
+
+.paper-color .popup-menu-content,
+.paper-color .candidate-popup-content {
+  background-color: #FDFAF6;
+  color: #343434;
+  border: 1px solid #EDE7DD;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(52, 52, 52, 0.08);
+}
+
+.paper-color .popup-menu {
+  color: #343434;
+}
+
+.paper-color .popup-menu-item {
+  color: #343434;
+  border-radius: 6px;
+}
+
+.paper-color .popup-menu-item:hover,
+.paper-color .popup-menu-item:selected {
+  background-color: #D9E4EA;
+  color: #343434;
+}
+
+.paper-color .popup-menu-item:active,
+.paper-color .popup-menu-item:checked {
+  background-color: #CBD8E0;
+  color: #343434;
+}
+
+.paper-color .popup-separator-menu-item,
+.paper-color .popup-separator-menu-item .popup-separator-menu-item-separator {
+  background-color: #EDE7DD;
+}
+
+.paper-color .modal-dialog,
+.paper-color .end-session-dialog,
+.paper-color .prompt-dialog,
+.paper-color .run-dialog {
+  background-color: #FDFAF6;
+  color: #343434;
+  border: 1px solid #EDE7DD;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(52, 52, 52, 0.1);
+}
+
+.paper-color .modal-dialog-button-box StButton,
+.paper-color .dialog-button {
+  background-color: #FDFAF6;
+  color: #343434;
+  border: 1px solid #EDE7DD;
+  border-radius: 6px;
+  box-shadow: none;
+}
+
+.paper-color .modal-dialog-button-box StButton:hover {
+  background-color: #F5EFE7;
+}
+
+.paper-color .modal-dialog-button-box StButton:default,
+.paper-color .modal-dialog-button-box StButton:focus {
+  background-color: #D9E4EA;
+  color: #343434;
+  border-color: #CBD8E0;
+}
+
+.paper-color .message,
+.paper-color .notification-banner,
+.paper-color .notification-banner .message {
+  background-color: #FDFAF6;
+  color: #343434;
+  border: 1px solid #EDE7DD;
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(52, 52, 52, 0.08);
+}
+
+.paper-color .message .message-title,
+.paper-color .message .message-body,
+.paper-color .message .message-header {
+  color: #343434;
+}
+
+.paper-color .message .message-header .event-time {
+  color: #89857D;
+}
+
+.paper-color .quick-settings,
+.paper-color .quick-toggle,
+.paper-color .quick-toggle-menu,
+.paper-color .quick-slider,
+.paper-color .quick-menu-toggle {
+  background-color: #FDFAF6;
+  color: #343434;
+}
+
+.paper-color .quick-toggle {
+  border: 1px solid #EDE7DD;
+  border-radius: 8px;
+}
+
+.paper-color .quick-toggle:hover {
+  background-color: #F5EFE7;
+}
+
+.paper-color .quick-toggle:checked {
+  background-color: #D9E4EA;
+  color: #343434;
+}
+
+.paper-color .toggle-switch {
+  background-color: #E7E1D8;
+  color: #343434;
+}
+
+.paper-color .popup-menu-item:checked .toggle-switch,
+.paper-color .toggle-switch:checked {
+  background-color: #D7E4DF;
+}
+
+.paper-color .slider {
+  color: #343434;
+  -barlevel-background-color: #E7E1D8;
+  -barlevel-active-background-color: #D9E4EA;
+}
+
+.paper-color .osd-window,
+.paper-color .workspace-switcher,
+.paper-color .switcher-list,
+.paper-color .resize-popup {
+  background-color: #F5EFE7;
+  color: #343434;
+  border: 1px solid #EDE7DD;
+}
+
+.paper-color .search-entry,
+.paper-color StEntry {
+  background-color: #F7F1E8;
+  color: #343434;
+  border: 1px solid #EDE7DD;
+  border-radius: 6px;
+  box-shadow: none;
+  selection-background-color: #D9E4EA;
+  selected-color: #343434;
+}
+
+.paper-color .calendar,
+.paper-color .datemenu-today-button,
+.paper-color .events-button,
+.paper-color .world-clocks-button,
+.paper-color .weather-button {
+  background-color: #FDFAF6;
+  color: #343434;
+  border: 1px solid #EDE7DD;
+}
+
+.paper-color .calendar-day-base:selected,
+.paper-color .calendar-today {
+  background-color: #D9E4EA;
+  color: #343434;
+}
+
+.paper-color #dashtodockContainer #dash .dash-background,
+.paper-color #dash .dash-background {
+  background-color: #F5EFE7;
+  border: 1px solid #EDE7DD;
+  box-shadow: 1px 0 0 rgba(52, 52, 52, 0.04);
+}
+
+.paper-color #dashtodockContainer.left #dash .dash-background,
+.paper-color #dashtodockContainer.fixed #dash .dash-background {
+  background-color: #F5EFE7;
+  border-radius: 0;
+}
+
+.paper-color #dashtodockContainer .dash-separator {
+  background-color: #EDE7DD;
+}
+
+.paper-color #dashtodockContainer .app-well-app:hover .overview-icon,
+.paper-color #dashtodockContainer .overview-tile:hover .overview-icon,
+.paper-color #dashtodockContainer .show-apps:hover .overview-icon,
+.paper-color #dashtodockContainer .app-well-app:focused .overview-icon,
+.paper-color #dashtodockContainer .overview-tile.focused .overview-icon {
+  background-color: rgba(175, 200, 216, 0.55);
+}
+
+.paper-color #dashtodockContainer .app-well-app-running-dot,
+.paper-color #dashtodockContainer .app-grid-running-dot {
+  background-color: #D9E4EA;
+}
+
+.paper-color #overviewGroup,
+.paper-color .overview-controls {
+  background-color: #F7F1E8;
+}
+
+.paper-color .app-folder-dialog,
+.paper-color .overview-tile {
+  color: #343434;
+}

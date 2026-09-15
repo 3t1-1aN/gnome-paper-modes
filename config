@@ -1,0 +1,34 @@
+# paper-modes look knobs
+# saturation: 0 = ink/gray, 1 = full color
+# contrast:   1 = unchanged, >1 punchier, <1 softer
+# black:      lifted floor (paper, not OLED black)
+# white:      slightly compressed highlights
+# temperature: white point in Kelvin (6500 = daylight, lower = warmer paper)
+
+NOTIFY=1
+CYCLE_ORDER="regular ink color-paper"
+KEYBINDING="<Super><Shift>p"
+
+# How long a mode switch takes to wash in, in milliseconds.
+# Keep close to GNOME's wallpaper fade (1000ms) so they finish together.
+TRANSITION_MS=1100
+
+# --- ink: BW e-ink paper ---
+# Softer than LCD, but ink stays dense (not a gray wash).
+INK_SATURATION=0.0
+INK_CONTRAST=0.92
+INK_BLACK=0.04
+INK_WHITE=0.96
+INK_TEMPERATURE=6500
+# Gray steps (16-24 reads like Carta). 1 = off.
+INK_LEVELS=18
+# Bayer dither amount before quantization.
+INK_GRAIN=0.03
+
+# Color Paper stationery theme, plus a light wash so icons and
+# leftover app chrome pick up the same pastel pigment.
+COLOR_SATURATION=0.84
+COLOR_CONTRAST=0.96
+COLOR_BLACK=0.015
+COLOR_WHITE=0.99
+COLOR_TEMPERATURE=5600
