@@ -8,8 +8,6 @@ Developed on **Ubuntu with GNOME Shell 50** (Wayland). The helper declares suppo
 
 ## Screenshots
 
-Drop PNGs into `screenshots/` using these names — they show up here automatically:
-
 | Regular | Ink | Color paper |
 | --- | --- | --- |
 | ![Regular](screenshots/regular.png) | ![Ink](screenshots/ink.png) | ![Color paper](screenshots/color-paper.png) |
