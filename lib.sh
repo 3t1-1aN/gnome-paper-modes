@@ -16,6 +16,7 @@ paper_load_config() {
 
 paper_mkdirs() {
     mkdir -p "$PAPER_STATE_DIR"
+    printf '%s\n' "$PAPER_ROOT" > "$PAPER_STATE_DIR/root"
 }
 
 paper_current_mode() {

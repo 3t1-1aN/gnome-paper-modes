@@ -1,8 +1,8 @@
 {
   "uuid": "paper-modes@local",
   "name": "Paper Modes",
-  "description": "Applies regular, ink, and color-paper screen color transforms for ~/paper-modes.",
-  "shell-version": ["50"],
+  "description": "Toggle regular Ubuntu, e-ink, and color-paper desktop looks.",
+  "shell-version": ["46", "47", "48", "49", "50"],
   "session-modes": ["user", "unlock-dialog"],
-  "url": "file:///home/ekunder/paper-modes"
+  "url": "https://github.com/3t1-1aN/paper-modes"
 }

@@ -140,6 +140,8 @@ PY
 }
 
 paper_install() {
+    paper_preflight
+    paper_mkdirs
     mkdir -p "$(dirname "$PAPER_EXT_DST")" "$(dirname "$PAPER_BIN")"
     ln -sfn "$PAPER_EXT_SRC" "$PAPER_EXT_DST"
     ln -sfn "$ROOT/mode.sh" "$PAPER_BIN"
@@ -148,12 +150,43 @@ paper_install() {
     ln -sfn "$ROOT/mode.sh" "$HOME/.local/share/gnome-shell/extensions/mode.sh"
     paper_enable_in_gnome
     paper_bind
-    echo "Installed $PAPER_BIN"
+    echo
+    echo "Paper modes installed from $ROOT"
+    echo "  command:  $PAPER_BIN"
+    echo "  shortcut: ${KEYBINDING:-<Super><Shift>p}"
+    echo "  tray:     top bar, after you log in again"
+    if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
+        echo
+        echo "Add this to your shell profile so 'paper-mode' is on PATH:"
+        echo "  export PATH=\"\$HOME/.local/bin:\$PATH\""
+        echo "Until then, run: $PAPER_BIN"
+    fi
     if paper_extension_enabled; then
+        echo
         echo "Compositor helper is enabled."
         paper_reload_extension
+        echo "If the tray icon is missing, log out and back in once."
     else
-        echo "Compositor helper will load after you log out and back in once."
+        echo
+        echo "Log out and back in once so GNOME can load the helper,"
+        echo "then run: paper-mode cycle"
+    fi
+}
+
+paper_preflight() {
+    local missing=0
+    for cmd in python3 gsettings gnome-extensions; do
+        if ! command -v "$cmd" >/dev/null 2>&1; then
+            echo "Missing dependency: $cmd" >&2
+            missing=1
+        fi
+    done
+    if [[ "$missing" -ne 0 ]]; then
+        echo "Install those tools and try again." >&2
+        return 1
+    fi
+    if [[ "${XDG_SESSION_TYPE:-}" != "wayland" && -n "${XDG_SESSION_TYPE:-}" ]]; then
+        echo "Note: this session is '${XDG_SESSION_TYPE}', not Wayland. Looks may be limited." >&2
     fi
 }
 

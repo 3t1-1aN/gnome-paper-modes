@@ -348,11 +348,25 @@ export default class PaperModesExtension extends Extension {
         }
     }
 
-    _rootDir() {
-        const homeRoot = GLib.build_filenamev([GLib.get_home_dir(), 'paper-modes']);
-        if (Gio.File.new_for_path(GLib.build_filenamev([homeRoot, 'config'])).query_exists(null))
-            return homeRoot;
+    _hasConfig(dir) {
+        if (!dir)
+            return false;
+        return Gio.File.new_for_path(
+            GLib.build_filenamev([dir, 'config'])).query_exists(null);
+    }
 
+    _rootFromState() {
+        try {
+            const file = Gio.File.new_for_path(
+                GLib.build_filenamev([GLib.get_user_state_dir(), 'paper-modes', 'root']));
+            const [, bytes] = file.load_contents(null);
+            return new TextDecoder().decode(bytes).trim();
+        } catch (e) {
+            return '';
+        }
+    }
+
+    _rootFromExtension() {
         const ext = Gio.File.new_for_path(this.path);
         try {
             const info = ext.query_info(
@@ -369,6 +383,22 @@ export default class PaperModesExtension extends Extension {
             // fall through
         }
         return ext.get_parent().get_path();
+    }
+
+    _rootDir() {
+        const fromExt = this._rootFromExtension();
+        if (this._hasConfig(fromExt))
+            return fromExt;
+
+        const fromState = this._rootFromState();
+        if (this._hasConfig(fromState))
+            return fromState;
+
+        const homeRoot = GLib.build_filenamev([GLib.get_home_dir(), 'paper-modes']);
+        if (this._hasConfig(homeRoot))
+            return homeRoot;
+
+        return fromExt || homeRoot;
     }
 
     _parseConfig() {
