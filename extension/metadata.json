@@ -4,5 +4,5 @@
   "description": "Toggle regular Ubuntu, e-ink, and color-paper desktop looks.",
   "shell-version": ["46", "47", "48", "49", "50"],
   "session-modes": ["user", "unlock-dialog"],
-  "url": "https://github.com/3t1-1aN/paper-modes"
+  "url": "https://github.com/3t1-1aN/gnome-paper-modes"
 }

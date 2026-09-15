@@ -1,4 +1,4 @@
-# Paper modes
+# Paper modes for GNOME
 
 Three toggleable looks for GNOME: your normal desktop, a black-and-white e-ink grade, and a warm stationery “color paper” theme.
 
@@ -19,7 +19,7 @@ Drop PNGs into `screenshots/` using these names — they show up here automatica
 Needs `git`, `python3`, `gsettings`, and `gnome-extensions` (a normal Ubuntu GNOME session already has the last three).
 
 ```bash
-git clone https://github.com/3t1-1aN/paper-modes.git
+git clone https://github.com/3t1-1aN/gnome-paper-modes.git
 cd paper-modes
 ./install.sh
 ```
