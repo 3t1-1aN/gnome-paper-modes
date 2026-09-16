@@ -1,0 +1,62 @@
+/* paper-modes: color-paper  —  GTK3 dark-paper override
+ * Keep dark mode, but lift pure blacks into warm charcoal paper. */
+
+@define-color theme_bg_color #2A2C2F;
+@define-color theme_fg_color #D6D2CB;
+@define-color theme_base_color #32353A;
+@define-color theme_text_color #D6D2CB;
+@define-color theme_selected_bg_color #53636D;
+@define-color theme_selected_fg_color #EAE5DC;
+@define-color theme_unfocused_bg_color #2D3034;
+@define-color theme_unfocused_fg_color #BBB7B0;
+@define-color insensitive_bg_color #30343A;
+@define-color insensitive_fg_color #8F8A84;
+@define-color borders #43484E;
+@define-color accent_bg_color #60727D;
+@define-color accent_fg_color #ECE7DE;
+
+window, .background, .csd {
+  background-color: #2A2C2F;
+  color: #D6D2CB;
+}
+
+/* Desktop Icons NG must stay transparent or it paints over the wallpaper. */
+window.desktopwindow,
+window.desktopwindow.background,
+window.desktopwindow.csd {
+  background-color: transparent;
+  background-image: none;
+}
+
+headerbar, .titlebar, .titlebar.default-decoration {
+  background-image: none;
+  background-color: #30343A;
+  color: #D6D2CB;
+  border-color: #373A3E;
+  box-shadow: none;
+}
+
+menu, .menu, .context-menu, popover, .popover,
+entry, textview, textview text, spinbutton,
+button, .button, .view, treeview, iconview, list, .list {
+  background-image: none;
+  background-color: #32353A;
+  color: #D6D2CB;
+  border-color: #373A3E;
+}
+
+button:hover, .button:hover {
+  background-color: #3A3E44;
+}
+
+button:active, .button:active {
+  background-color: #42474F;
+}
+
+button.suggested-action, .suggested-action,
+check:checked, radio:checked,
+row:selected, treeview:selected, .view:selected, iconview:selected {
+  background-color: #60727D;
+  color: #ECE7DE;
+  border-color: #6D818D;
+}

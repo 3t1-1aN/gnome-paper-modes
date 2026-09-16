@@ -5,7 +5,7 @@
 # white:      slightly compressed highlights
 # temperature: white point in Kelvin (6500 = daylight, lower = warmer paper)
 
-NOTIFY=1
+NOTIFY=0
 CYCLE_ORDER="regular ink color-paper"
 KEYBINDING="<Super><Shift>p"
 
@@ -25,10 +25,10 @@ INK_LEVELS=18
 # Bayer dither amount before quantization.
 INK_GRAIN=0.03
 
-# Color Paper stationery theme, plus a light wash so icons and
-# leftover app chrome pick up the same pastel pigment.
-COLOR_SATURATION=0.84
-COLOR_CONTRAST=0.96
-COLOR_BLACK=0.015
-COLOR_WHITE=0.99
-COLOR_TEMPERATURE=5600
+# Color Paper stationery theme — softer pastel wash (lower chroma,
+# milkier blacks, warmer paper white-point).
+COLOR_SATURATION=0.68
+COLOR_CONTRAST=0.92
+COLOR_BLACK=0.035
+COLOR_WHITE=0.985
+COLOR_TEMPERATURE=5400

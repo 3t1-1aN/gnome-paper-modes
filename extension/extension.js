@@ -42,8 +42,9 @@ const VEIL = {
     regular: [0.94, 0.938, 0.93],
 };
 
-// Dual grade + a top-to-bottom paper wash. At rest mix_t=1, wash=1, veil=0
-// so this collapses to the destination look.
+// Dual grade plus a moving paper front. wash_style picks the geometry
+// (0 down, 1 radial, 2 up). wipe blends a global lerp with that front.
+// At rest mix_t=1, wash=1, veil=0 so this collapses to the destination.
 const SHADER_DECL = `
 uniform float sat_a;
 uniform float sat_b;
@@ -64,34 +65,46 @@ uniform float levels_a;
 uniform float levels_b;
 uniform float grain_a;
 uniform float grain_b;
+uniform float wipe;
+uniform float wash_style;
 `;
 
 const SHADER_CODE = `
 float alpha = cogl_color_out.a;
-vec3 src = cogl_color_out.rgb / max(alpha, 0.0001);
+vec3 premul = cogl_color_out.rgb;
+// Some blur passes can hand us very small alpha with non-trivial RGB.
+// Guard the unpremultiply so those pixels cannot explode into a white veil.
+vec3 src = alpha > 0.001 ? clamp(premul / alpha, 0.0, 1.0) : vec3(0.0);
 float luma = dot(src, vec3(0.299, 0.587, 0.114));
 
+// Saturate once. A second luma mix used to run after remap and crushed
+// mild color-paper washes into grey (especially cool wallpaper pigments).
 vec3 a = mix(vec3(luma), src, sat_a);
 a = (a - 0.5) * contrast_a + 0.5;
 a *= temp_a;
 a = clamp(mix(vec3(black_a), vec3(white_a), clamp(a, 0.0, 1.0)), 0.0, 1.0);
-float luma_a = dot(a, vec3(0.299, 0.587, 0.114));
-a = mix(vec3(luma_a), a, sat_a);
 
 vec3 b = mix(vec3(luma), src, sat_b);
 b = (b - 0.5) * contrast_b + 0.5;
 b *= temp_b;
 b = clamp(mix(vec3(black_b), vec3(white_b), clamp(b, 0.0, 1.0)), 0.0, 1.0);
-float luma_b = dot(b, vec3(0.299, 0.587, 0.114));
-b = mix(vec3(luma_b), b, sat_b);
 
-float ny = 1.0 - (gl_FragCoord.y / max(resolution.y, 1.0));
+float yv = gl_FragCoord.y / max(resolution.y, 1.0);
+float xv = gl_FragCoord.x / max(resolution.x, 1.0);
+float aspect = resolution.x / max(resolution.y, 1.0);
+float rad = length(vec2((xv - 0.5) * aspect, yv - 0.5));
+float down = 1.0 - yv;
+float up = yv;
+float coord = down;
+coord = mix(coord, rad * 1.28, step(0.5, wash_style) * (1.0 - step(1.5, wash_style)));
+coord = mix(coord, up, step(1.5, wash_style));
+
 float front = mix(-0.18, 1.18, wash);
-float spatial = smoothstep(front - 0.20, front + 0.16, ny);
-float reveal = clamp(mix(mix_t, 1.0 - spatial, 0.22), 0.0, 1.0);
+float spatial = smoothstep(front - 0.22, front + 0.16, coord);
+float reveal = clamp(mix(mix_t, 1.0 - spatial, wipe), 0.0, 1.0);
 vec3 color = mix(a, b, reveal);
 
-float wet = 1.0 - smoothstep(0.0, 0.13, abs(ny - front));
+float wet = 1.0 - smoothstep(0.0, 0.14, abs(coord - front));
 float paper = clamp(veil * 0.22 + veil * wet * 0.72, 0.0, 0.82);
 color = mix(color, veil_rgb, paper);
 
@@ -99,7 +112,7 @@ color = mix(color, veil_rgb, paper);
 float rest = step(0.999, mix_t) * step(veil, 0.001);
 color = mix(color, b, rest);
 
-float sat = mix(sat_a, sat_b, clamp(mix_t, 0.0, 1.0));
+float sat = mix(sat_a, sat_b, reveal);
 float inkness = 1.0 - smoothstep(0.02, 0.12, sat);
 float g = dot(color, vec3(0.299, 0.587, 0.114));
 vec2 bxy = mod(floor(gl_FragCoord.xy), 4.0);
@@ -109,13 +122,17 @@ float bayer = (
     mod(floor(bxy.x * 0.5), 2.0) * 2.0 +
     mod(floor(bxy.y * 0.5), 2.0)
 ) / 16.0;
-float grain = mix(grain_a, grain_b, clamp(mix_t, 0.0, 1.0));
-float levels = mix(levels_a, levels_b, clamp(mix_t, 0.0, 1.0));
+float grain = mix(grain_a, grain_b, reveal);
+float levels = mix(levels_a, levels_b, reveal);
 g += (bayer - 0.47) * grain * inkness;
 g = mix(g, floor(g * max(levels, 1.0) + 0.5) / max(levels, 1.0), step(1.5, levels));
 color = mix(color, vec3(clamp(g, 0.0, 1.0)), inkness);
 
-cogl_color_out.rgb = color * alpha;
+vec3 gradedPremul = clamp(color, 0.0, 1.0) * alpha;
+// Keep translucent layers close to their original premul color to avoid
+// random "see-through" artifacts when other extensions animate blur/focus.
+float alphaGate = smoothstep(0.10, 0.24, alpha);
+cogl_color_out.rgb = mix(premul, gradedPremul, alphaGate);
 `;
 
 function kelvinToRgb(kelvin) {
@@ -157,6 +174,31 @@ function lookKey(look) {
 
 function lerp(a, b, t) {
     return a + (b - a) * t;
+}
+
+function paperGate(to) {
+    if (to.mode === 'color-paper') {
+        // Soft warm soak — keep chroma so the wallpaper does not flash grey.
+        return {
+            ...to,
+            saturation: Math.max(0.72, (to.saturation ?? 1) * 0.85),
+            contrast: 0.94,
+            black: 0.03,
+            white: 0.98,
+            temperature: Math.min(to.temperature ?? 5600, 5400),
+            levels: 1,
+            grain: 0,
+        };
+    }
+    return {
+        ...IDENTITY,
+        saturation: 0.18,
+        contrast: 0.90,
+        black: 0.045,
+        white: 0.96,
+        levels: 1,
+        grain: 0,
+    };
 }
 
 function lerpLook(from, to, t) {
@@ -209,6 +251,8 @@ class PaperEffect extends Shell.GLSLEffect {
         this._levelsB = this.get_uniform_location('levels_b');
         this._grainA = this.get_uniform_location('grain_a');
         this._grainB = this.get_uniform_location('grain_b');
+        this._wipeLoc = this.get_uniform_location('wipe');
+        this._washStyleLoc = this.get_uniform_location('wash_style');
         this._key = '';
     }
 
@@ -240,6 +284,8 @@ class PaperEffect extends Shell.GLSLEffect {
         this.set_uniform_float(this._levelsB, 1, [to.levels ?? 1]);
         this.set_uniform_float(this._grainA, 1, [from.grain ?? 0]);
         this.set_uniform_float(this._grainB, 1, [to.grain ?? 0]);
+        this.set_uniform_float(this._wipeLoc, 1, [extras.wipe ?? 0]);
+        this.set_uniform_float(this._washStyleLoc, 1, [extras.washStyle ?? 0]);
         this.queue_repaint();
     }
 
@@ -252,6 +298,8 @@ class PaperEffect extends Shell.GLSLEffect {
             veil: 0,
             veilRgb: veilRgb(look.mode),
             resolution: stageSize(),
+            wipe: 0,
+            washStyle: 0,
         });
         this._key = key;
     }
@@ -541,8 +589,19 @@ export default class PaperModesExtension extends Extension {
         return Main.layoutManager.uiGroup;
     }
 
+    _prefersDark() {
+        try {
+            const iface = new Gio.Settings({schema_id: 'org.gnome.desktop.interface'});
+            return iface.get_string('color-scheme') === 'prefer-dark';
+        } catch (e) {
+            return false;
+        }
+    }
+
     _setPaperChrome(on) {
         const cls = 'paper-color';
+        const darkCls = 'paper-color-dark';
+        const dark = on && this._prefersDark();
         const actors = [Main.layoutManager.uiGroup, Main.panel];
         for (const actor of actors) {
             if (!actor)
@@ -551,6 +610,10 @@ export default class PaperModesExtension extends Extension {
                 actor.add_style_class_name(cls);
             else
                 actor.remove_style_class_name(cls);
+            if (dark)
+                actor.add_style_class_name(darkCls);
+            else
+                actor.remove_style_class_name(darkCls);
         }
     }
 
@@ -685,12 +748,14 @@ export default class PaperModesExtension extends Extension {
             return;
         }
 
-        const duration = this._transitionMs();
+        let duration = this._transitionMs();
         if (duration <= 8) {
             this._themeDone = false;
             this._commitLook(look, true);
             return;
         }
+        if (look.mode === 'color-paper' || from.mode === 'color-paper')
+            duration = Math.round(duration * 1.22);
 
         this._startTransition(from, look, duration);
     }
@@ -750,16 +815,80 @@ export default class PaperModesExtension extends Extension {
         if (!from || !to)
             return;
 
-        const t = smootherstep(progress);
-        const wash = smootherstep(progress);
-        const veil = Math.sin(progress * Math.PI) * 0.08;
-        this._visualLook = lerpLook(from, to, t);
-        this._paintBlend(from, to, t, {
-            wash,
-            veil,
-            veilRgb: veilRgb(to.mode),
+        const plan = this._washPlan(from, to, progress);
+        this._visualLook = lerpLook(from, to, smootherstep(progress));
+        this._paintBlend(plan.gradeA, plan.gradeB, plan.mixT, {
+            wash: plan.wash,
+            veil: plan.veil,
+            veilRgb: plan.veilRgb,
             resolution: stageSize(),
+            wipe: plan.wipe,
+            washStyle: plan.washStyle,
         });
+    }
+
+    _washPlan(from, to, progress) {
+        const p = Math.min(1, Math.max(0, progress));
+        const destVeil = veilRgb(to.mode);
+
+        // Keep the original ink sheet. That motion already reads.
+        if (to.mode === 'ink') {
+            const t = smootherstep(p);
+            return {
+                gradeA: from,
+                gradeB: to,
+                mixT: t,
+                wash: t,
+                wipe: 0.22,
+                washStyle: 0,
+                veil: Math.sin(p * Math.PI) * 0.08,
+                veilRgb: destVeil,
+            };
+        }
+
+        // Color-paper is a close grade, so a global lerp disappears.
+        // Soak like ink first, then bloom pigment from the center.
+        if (to.mode === 'color-paper' || from.mode === 'color-paper') {
+            const gate = paperGate(to);
+            const split = 0.42;
+            if (p < split) {
+                const local = smootherstep(p / split);
+                return {
+                    gradeA: from,
+                    gradeB: gate,
+                    mixT: local,
+                    wash: local,
+                    wipe: 1,
+                    washStyle: 0,
+                    veil: Math.sin(local * Math.PI) * 0.22,
+                    veilRgb: destVeil,
+                };
+            }
+            const local = smootherstep((p - split) / (1 - split));
+            return {
+                gradeA: gate,
+                gradeB: to,
+                mixT: local,
+                wash: local,
+                wipe: 1,
+                washStyle: 1,
+                veil: Math.sin(local * Math.PI) * 0.16,
+                veilRgb: destVeil,
+            };
+        }
+
+        // Leaving ink for regular: color climbs back up the page.
+        const t = smootherstep(p);
+        return {
+            gradeA: from,
+            gradeB: to,
+            mixT: t,
+            wash: t,
+            wipe: 1,
+            washStyle: 2,
+            veil: Math.sin(p * Math.PI) * 0.14,
+            veilRgb: destVeil,
+        };
     }
 
     _stopTransition(commit = true) {

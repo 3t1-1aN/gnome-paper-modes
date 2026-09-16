@@ -12,6 +12,8 @@ Developed on **Ubuntu with GNOME Shell 50** (Wayland). The helper declares suppo
 | --- | --- | --- |
 | ![Regular](screenshots/regular.png) | ![Ink](screenshots/ink.png) | ![Color paper](screenshots/color-paper.png) |
 
+These shots also have [Blur my Shell](https://github.com/aunetx/blur-my-shell) enabled. Paper modes work without it; the glass panels in the screenshots come from that extension.
+
 ## Install
 
 Needs `git`, `python3`, `gsettings`, and `gnome-extensions` (a normal Ubuntu GNOME session already has the last three).

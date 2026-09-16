@@ -1,0 +1,91 @@
+/* paper-modes: color-paper  —  GTK4/libadwaita dark-paper override
+ * Keep dark mode, but lift pure blacks into warm charcoal paper. */
+
+:root {
+  --window-bg-color: #2A2C2F;
+  --window-fg-color: #D6D2CB;
+  --view-bg-color: #32353A;
+  --view-fg-color: #D6D2CB;
+  --headerbar-bg-color: #30343A;
+  --headerbar-fg-color: #D6D2CB;
+  --headerbar-border-color: #43484E;
+  --popover-bg-color: #32353A;
+  --popover-fg-color: #D6D2CB;
+  --card-bg-color: #343941;
+  --card-fg-color: #D6D2CB;
+  --sidebar-bg-color: #30343A;
+  --sidebar-fg-color: #D1CDC6;
+  --accent-bg-color: #60727D;
+  --accent-fg-color: #ECE7DE;
+}
+
+@define-color window_bg_color #2A2C2F;
+@define-color window_fg_color #D6D2CB;
+@define-color view_bg_color #32353A;
+@define-color view_fg_color #D6D2CB;
+@define-color headerbar_bg_color #30343A;
+@define-color headerbar_fg_color #D6D2CB;
+@define-color headerbar_border_color #43484E;
+@define-color popover_bg_color #32353A;
+@define-color popover_fg_color #D6D2CB;
+@define-color card_bg_color #343941;
+@define-color card_fg_color #D6D2CB;
+@define-color sidebar_bg_color #30343A;
+@define-color sidebar_fg_color #D1CDC6;
+@define-color borders #43484E;
+@define-color theme_bg_color #2A2C2F;
+@define-color theme_fg_color #D6D2CB;
+@define-color theme_base_color #32353A;
+@define-color theme_text_color #D6D2CB;
+@define-color theme_selected_bg_color #60727D;
+@define-color theme_selected_fg_color #ECE7DE;
+@define-color accent_bg_color #60727D;
+@define-color accent_fg_color #ECE7DE;
+
+window, .background, headerbar, .titlebar,
+popover, popover.background, menu, .menu,
+entry, textview, spinbutton, list, listview, columnview, iconview, treeview {
+  background-color: #32353A;
+  color: #D6D2CB;
+  border-color: #373A3E;
+  box-shadow: none;
+}
+
+window, .background {
+  background-color: #2A2C2F;
+}
+
+/* Desktop Icons NG must stay transparent or it paints over the wallpaper. */
+window.desktopwindow,
+window.desktopwindow.background {
+  background-color: transparent;
+  background-image: none;
+}
+
+headerbar, .titlebar {
+  background-color: #30343A;
+}
+
+button {
+  background: #363B42;
+  color: #D6D2CB;
+  border: 1px solid #454B53;
+  box-shadow: none;
+}
+
+button:hover {
+  background: #3E454D;
+}
+
+button:active {
+  background: #47505A;
+}
+
+button.suggested-action, .suggested-action,
+list row:selected, listview row:selected,
+iconview:selected, treeview:selected,
+check:checked, radio:checked {
+  background: #60727D;
+  color: #ECE7DE;
+  border-color: #6D818D;
+}

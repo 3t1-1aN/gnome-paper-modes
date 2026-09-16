@@ -103,6 +103,13 @@ window, .background {
   color: #343434;
 }
 
+/* Desktop Icons NG must stay transparent or it paints over the wallpaper. */
+window.desktopwindow,
+window.desktopwindow.background {
+  background-color: transparent;
+  background-image: none;
+}
+
 headerbar, .titlebar {
   background-color: #F5EFE7;
   color: #343434;

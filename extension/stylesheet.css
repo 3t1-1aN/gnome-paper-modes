@@ -189,16 +189,16 @@
   color: #343434;
 }
 
+/* Dock fill comes from dash-to-dock gsettings (apply.py picks cream vs charcoal).
+ * Stylesheet only adds paper chrome details so dark/light fills are not overridden. */
 .paper-color #dashtodockContainer #dash .dash-background,
 .paper-color #dash .dash-background {
-  background-color: #F5EFE7;
   border: 1px solid #EDE7DD;
   box-shadow: 1px 0 0 rgba(52, 52, 52, 0.04);
 }
 
 .paper-color #dashtodockContainer.left #dash .dash-background,
 .paper-color #dashtodockContainer.fixed #dash .dash-background {
-  background-color: #F5EFE7;
   border-radius: 0;
 }
 
@@ -217,6 +217,37 @@
 .paper-color #dashtodockContainer .app-well-app-running-dot,
 .paper-color #dashtodockContainer .app-grid-running-dot {
   background-color: #D9E4EA;
+}
+
+/* Dark color-paper: warm charcoal dock rail (matches gtk-*-dark.css) */
+.paper-color-dark #dashtodockContainer #dash .dash-background,
+.paper-color-dark #dash .dash-background {
+  background-color: #30343A;
+  border: 1px solid #43484E;
+  box-shadow: 1px 0 0 rgba(0, 0, 0, 0.18);
+}
+
+.paper-color-dark #dashtodockContainer.left #dash .dash-background,
+.paper-color-dark #dashtodockContainer.fixed #dash .dash-background {
+  background-color: #30343A;
+  border-radius: 0;
+}
+
+.paper-color-dark #dashtodockContainer .dash-separator {
+  background-color: #43484E;
+}
+
+.paper-color-dark #dashtodockContainer .app-well-app:hover .overview-icon,
+.paper-color-dark #dashtodockContainer .overview-tile:hover .overview-icon,
+.paper-color-dark #dashtodockContainer .show-apps:hover .overview-icon,
+.paper-color-dark #dashtodockContainer .app-well-app:focused .overview-icon,
+.paper-color-dark #dashtodockContainer .overview-tile.focused .overview-icon {
+  background-color: rgba(96, 114, 125, 0.55);
+}
+
+.paper-color-dark #dashtodockContainer .app-well-app-running-dot,
+.paper-color-dark #dashtodockContainer .app-grid-running-dot {
+  background-color: #8FA3AE;
 }
 
 .paper-color #overviewGroup,

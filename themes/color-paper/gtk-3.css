@@ -37,6 +37,14 @@ window, .background, .csd {
   color: #343434;
 }
 
+/* Desktop Icons NG must stay transparent or it paints over the wallpaper. */
+window.desktopwindow,
+window.desktopwindow.background,
+window.desktopwindow.csd {
+  background-color: transparent;
+  background-image: none;
+}
+
 headerbar, .titlebar, .titlebar.default-decoration {
   background-image: none;
   background-color: #F5EFE7;

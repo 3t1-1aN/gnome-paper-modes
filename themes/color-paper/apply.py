@@ -7,6 +7,7 @@ import argparse
 import json
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 HOME = Path.home()
@@ -16,7 +17,12 @@ SAVED = STATE / "appearance.json"
 MARKER = "paper-modes: color-paper"
 GTK3 = HOME / ".config/gtk-3.0/gtk.css"
 GTK4 = HOME / ".config/gtk-4.0/gtk.css"
-WALLPAPER = ROOT / "wallpaper.png"
+# Prefer the lean JPEG; PNG remains as a generated sibling.
+WALLPAPER_SRC = ROOT / "wallpaper.jpg"
+WALLPAPER_SRC_FALLBACK = ROOT / "wallpaper.png"
+# Stable path under the backgrounds dir GNOME already watches.
+WALLPAPER_DST = HOME / ".local/share/backgrounds/paper-modes-color-paper.jpg"
+PAPER_PRIMARY = "#F7F1E8"
 
 GSET = [
     ("org.gnome.desktop.interface", "gtk-theme"),
@@ -57,6 +63,67 @@ def write_css(dest: Path, src: Path) -> None:
     dest.write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
 
 
+def ensure_wallpaper_asset() -> Path:
+    """Return a wallpaper file path, regenerating the lean JPEG if needed."""
+    if WALLPAPER_SRC.exists() and WALLPAPER_SRC.stat().st_size > 10_000:
+        return WALLPAPER_SRC
+    gen = ROOT / "generate_wallpaper.py"
+    if gen.exists():
+        subprocess.run([sys.executable, str(gen)], check=False)
+    if WALLPAPER_SRC.exists():
+        return WALLPAPER_SRC
+    if WALLPAPER_SRC_FALLBACK.exists():
+        return WALLPAPER_SRC_FALLBACK
+    raise FileNotFoundError(f"missing wallpaper at {WALLPAPER_SRC}")
+
+
+def install_wallpaper() -> Path:
+    """Copy into ~/.local/share/backgrounds so GNOME has a stable, small file."""
+    src = ensure_wallpaper_asset()
+    WALLPAPER_DST.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(src, WALLPAPER_DST)
+    return WALLPAPER_DST
+
+
+def set_wallpaper(path: Path) -> None:
+    """Point both light/dark URIs at the paper wallpaper and force a reload.
+
+    If glycin fails to decode (OOM), GNOME keeps showing primary-color — which
+    for color-paper is cream/white. Setting the URI alone is not enough when
+    the previous URI was already the same file after a failed load, so we
+    bounce primary-color and re-apply the URI once after a short delay.
+    """
+    uri = f"file://{path}"
+    quoted = f"'{uri}'"
+    gs_set("org.gnome.desktop.background", "picture-options", "'zoom'")
+    gs_set("org.gnome.desktop.background", "color-shading-type", "'solid'")
+    # Temporary non-paper primary so a failed decode is obvious/dark, then paper.
+    gs_set("org.gnome.desktop.background", "primary-color", "'#1a1a1a'")
+    gs_set("org.gnome.desktop.background", "picture-uri", quoted)
+    gs_set("org.gnome.desktop.background", "picture-uri-dark", quoted)
+    gs_set("org.gnome.desktop.background", "primary-color", f"'{PAPER_PRIMARY}'")
+
+    # Deferred re-set: mode switches often coincide with peak memory (blur,
+    # shell effects). A second apply after glycin settles fixes white desktops.
+    retry = f"""
+import subprocess, time
+time.sleep(1.2)
+uri = {quoted!r}
+for key in ("picture-uri", "picture-uri-dark"):
+    subprocess.run(["gsettings", "set", "org.gnome.desktop.background", key, uri], check=False)
+subprocess.run(
+    ["gsettings", "set", "org.gnome.desktop.background", "primary-color", "'{PAPER_PRIMARY}'"],
+    check=False,
+)
+"""
+    subprocess.Popen(
+        [sys.executable, "-c", retry],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        start_new_session=True,
+    )
+
+
 def save_appearance() -> None:
     STATE.mkdir(parents=True, exist_ok=True)
     if SAVED.exists():
@@ -82,21 +149,36 @@ def save_appearance() -> None:
 
 def apply_paper() -> None:
     save_appearance()
-    already = ours(GTK3)
-    write_css(GTK3, ROOT / "gtk-3.css")
-    write_css(GTK4, ROOT / "gtk-4.css")
-    gs_set("org.gnome.desktop.interface", "color-scheme", "prefer-light")
-    gs_set("org.gnome.desktop.interface", "gtk-theme", "'Yaru'")
+    # Keep the user's app light/dark preference and GTK theme unchanged.
+    # Color paper should come from compositor grade + wallpaper + dock chrome.
+    prefers_dark = "prefer-dark" in gs_get("org.gnome.desktop.interface", "color-scheme")
+    if prefers_dark:
+        write_css(GTK3, ROOT / "gtk-3-dark.css")
+        write_css(GTK4, ROOT / "gtk-4-dark.css")
+    else:
+        if GTK3.exists() and ours(GTK3):
+            GTK3.unlink()
+        if GTK4.exists() and ours(GTK4):
+            GTK4.unlink()
     gs_set("org.gnome.desktop.interface", "icon-theme", "'Yaru'")
     gs_set("org.gnome.desktop.interface", "accent-color", "slate")
     gs_set("org.gnome.settings-daemon.plugins.color", "night-light-enabled", "false")
-    if WALLPAPER.exists():
-        uri = f"'file://{WALLPAPER}'"
-        gs_set("org.gnome.desktop.background", "picture-uri", uri)
-        gs_set("org.gnome.desktop.background", "picture-uri-dark", uri)
-        gs_set("org.gnome.desktop.background", "primary-color", "'#F7F1E8'")
+
+    try:
+        installed = install_wallpaper()
+        set_wallpaper(installed)
+    except Exception as exc:  # noqa: BLE001 - surface in journal via stderr
+        print(f"paper-modes: wallpaper apply failed: {exc}", file=sys.stderr)
+
+    # Dock chrome follows the same light/dark paper split as GTK.
+    if prefers_dark:
+        dock_bg = "'#30343A'"
+        dock_dots = "'#8FA3AE'"
+    else:
+        dock_bg = "'#F5EFE7'"
+        dock_dots = "'#D9E4EA'"
     gs_set("org.gnome.shell.extensions.dash-to-dock", "custom-background-color", "true")
-    gs_set("org.gnome.shell.extensions.dash-to-dock", "background-color", "'#F5EFE7'")
+    gs_set("org.gnome.shell.extensions.dash-to-dock", "background-color", dock_bg)
     gs_set("org.gnome.shell.extensions.dash-to-dock", "background-opacity", "0.94")
     gs_set("org.gnome.shell.extensions.dash-to-dock", "transparency-mode", "'FIXED'")
     gs_set(
@@ -107,13 +189,9 @@ def apply_paper() -> None:
     gs_set(
         "org.gnome.shell.extensions.dash-to-dock",
         "custom-theme-running-dots-color",
-        "'#D9E4EA'",
+        dock_dots,
     )
     gs_set("org.gnome.shell.extensions.dash-to-dock", "apply-glossy-effect", "false")
-    if not already:
-        # Nudge GTK to reload the user stylesheet.
-        gs_set("org.gnome.desktop.interface", "gtk-theme", "'Adwaita'")
-        gs_set("org.gnome.desktop.interface", "gtk-theme", "'Yaru'")
 
 
 def restore_css(path: Path, backup_key: str, data: dict) -> None:
